@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartomancy — The Art of Divination</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Sarabun:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #080910;
+    --bg-card: #0d0f18;
+    --text-primary: #e8d9b0;
+    --text-secondary: #9a8a6a;
+    --text-muted: #3a3020;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: #7a6030;
+    --red: #c0394b;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'EB Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1px 1px at  8% 18%, rgba(201,168,76,.45) 0%,transparent 100%),
+      radial-gradient(1px 1px at 25% 72%, rgba(201,168,76,.25) 0%,transparent 100%),
+      radial-gradient(2px 2px at 47% 38%, rgba(232,201,122,.5)  0%,transparent 100%),
+      radial-gradient(1px 1px at 68% 12%, rgba(201,168,76,.3)   0%,transparent 100%),
+      radial-gradient(1px 1px at 83% 58%, rgba(201,168,76,.4)   0%,transparent 100%),
+      radial-gradient(1px 1px at 15% 88%, rgba(201,168,76,.2)   0%,transparent 100%),
+      radial-gradient(1px 1px at 58% 82%, rgba(232,201,122,.3)  0%,transparent 100%),
+      radial-gradient(1px 1px at 91% 33%, rgba(201,168,76,.35)  0%,transparent 100%),
+      radial-gradient(2px 2px at 38% 55%, rgba(201,168,76,.4)   0%,transparent 100%);
+  }
+  body::after {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background: radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.78) 100%);
+  }
+
+  .container { max-width:860px; margin:0 auto; padding:20px 16px 80px; position:relative; z-index:1; }
+
+  /* ── Header ── */
+  .header { text-align:center; padding:44px 0 28px; }
+
+  .header-eye {
+    font-size:26px; margin-bottom:10px; color:var(--gold);
+    animation:breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%,100%{ opacity:.4; transform:scale(1); }
+    50%    { opacity:.9; transform:scale(1.1); }
+  }
+
+  h1 {
+    font-family:'Cinzel Decorative',serif;
+    font-size:clamp(20px,5vw,40px); font-weight:900;
+    background:linear-gradient(135deg,#7a6030 0%,#e8c97a 40%,#c9a84c 65%,#7a6030 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    letter-spacing:2px; line-height:1.25; margin-bottom:6px;
+    filter:drop-shadow(0 0 22px rgba(201,168,76,.28));
+  }
+  .header-sub {
+    font-family:'Cinzel',serif;
+    font-size:clamp(10px,1.8vw,13px); color:var(--text-secondary);
+    letter-spacing:7px; text-transform:uppercase;
+  }
+  .divider {
+    display:flex; align-items:center; gap:14px; margin:22px 0 0;
+  }
+  .divider::before,.divider::after {
+    content:''; flex:1; height:1px;
+    background:linear-gradient(to right,transparent,var(--gold-dim),transparent);
+  }
+  .divider span { color:var(--gold); font-size:16px; }
+
+  /* ── Panel ── */
+  .panel {
+    background:linear-gradient(145deg,rgba(13,15,24,.92),rgba(10,11,18,.95));
+    border:1px solid rgba(201,168,76,.14); border-radius:14px;
+    padding:20px 22px; margin-bottom:22px; backdrop-filter:blur(12px);
+  }
+  .panel-label {
+    font-family:'Cinzel',serif; font-size:11px;
+    color:var(--gold-dim); letter-spacing:5px;
+    text-transform:uppercase; text-align:center; margin-bottom:14px;
+  }
+
+  .spread-tabs { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:16px; }
+  .spread-tab {
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:1.5px;
+    padding:7px 16px;
+    background:rgba(201,168,76,.05); border:1px solid rgba(201,168,76,.18); border-radius:20px;
+    color:var(--text-secondary); cursor:pointer; transition:all .3s;
+    white-space:nowrap; text-transform:uppercase;
+  }
+  .spread-tab:hover  { border-color:var(--gold); color:var(--gold-light); background:rgba(201,168,76,.1); }
+  .spread-tab.active { background:rgba(201,168,76,.14); border-color:var(--gold); color:var(--gold-light); }
+
+  .spread-desc {
+    text-align:center; font-style:italic; font-size:14px;
+    color:var(--text-secondary); line-height:2; min-height:44px;
+  }
+  .pos-chip {
+    display:inline-block; background:rgba(201,168,76,.1);
+    border:1px solid rgba(201,168,76,.22); border-radius:4px;
+    padding:1px 8px; font-size:11px; font-style:normal;
+    color:var(--gold); font-family:'Cinzel',serif; letter-spacing:1px; margin:2px;
+  }
+
+  /* ── Count Row ── */
+  .count-row { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:22px; }
+  .count-label { font-family:'Cinzel',serif; font-size:11px; letter-spacing:4px; color:var(--text-secondary); text-transform:uppercase; }
+  .count-btns { display:flex; gap:6px; }
+  .count-btn {
+    width:42px; height:42px;
+    background:rgba(201,168,76,.05); border:1px solid rgba(201,168,76,.18); border-radius:8px;
+    color:var(--text-secondary); font-family:'Cinzel',serif; font-size:17px;
+    cursor:pointer; transition:all .3s;
+  }
+  .count-btn:hover { border-color:var(--gold); color:var(--gold-light); }
+  .count-btn.active { background:rgba(201,168,76,.16); border-color:var(--gold); color:var(--gold-light); box-shadow:0 0 14px rgba(201,168,76,.18); }
+
+  /* ── Actions ── */
+  .actions { display:flex; gap:12px; justify-content:center; margin-bottom:14px; flex-wrap:wrap; }
+
+  .btn-draw {
+    font-family:'Cinzel',serif; font-size:13px; letter-spacing:4px;
+    padding:14px 44px;
+    background:linear-gradient(135deg,#6b4310,#c9a84c,#6b4310); background-size:200% 100%;
+    border:none; border-radius:6px; color:#080910;
+    cursor:pointer; transition:all .4s;
+    position:relative; overflow:hidden;
+    box-shadow:0 4px 22px rgba(201,168,76,.22),inset 0 1px 0 rgba(255,255,255,.12);
+    text-transform:uppercase;
+  }
+  .btn-draw::before {
+    content:''; position:absolute; top:0; left:-100%;
+    width:100%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);
+    transition:left .5s;
+  }
+  .btn-draw:hover::before { left:100%; }
+  .btn-draw:hover { background-position:100% 0; box-shadow:0 6px 32px rgba(201,168,76,.38); transform:translateY(-1px); }
+  .btn-draw:active { transform:translateY(0); }
+
+  .btn-reset {
+    font-family:'Cinzel',serif; font-size:11px; letter-spacing:3px;
+    padding:14px 22px; background:transparent;
+    border:1px solid rgba(201,168,76,.25); border-radius:6px;
+    color:var(--text-secondary); cursor:pointer; transition:all .3s;
+    text-transform:uppercase;
+  }
+  .btn-reset:hover { border-color:var(--gold); color:var(--gold-light); background:rgba(201,168,76,.06); }
+
+  /* ── Deck Status ── */
+  .deck-status {
+    text-align:center; margin-bottom:32px;
+    font-family:'Cinzel',serif; font-size:11px;
+    letter-spacing:3px; color:var(--text-muted); text-transform:uppercase;
+  }
+  .deck-status span { color:var(--gold-dim); }
+
+  /* ── Cards Area ── */
+  .cards-area {
+    display:flex; gap:18px; justify-content:center;
+    flex-wrap:wrap; perspective:1200px;
+    min-height:260px; align-items:flex-start; padding:4px 0;
+  }
+
+  .card-slot {
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    animation:rise .5s ease forwards; opacity:0;
+  }
+  @keyframes rise {
+    from { opacity:0; transform:translateY(-28px) scale(.92); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .pos-label {
+    font-family:'Cinzel',serif; font-size:10px; letter-spacing:3px;
+    color:var(--gold-dim); text-transform:uppercase; text-align:center;
+  }
+
+  /* Card */
+  .card-wrapper { width:138px; height:198px; perspective:800px; cursor:pointer; }
+  .card-inner {
+    width:100%; height:100%; position:relative;
+    transform-style:preserve-3d;
+    transition:transform .7s cubic-bezier(.4,0,.2,1);
+  }
+  .card-inner.flipped { transform:rotateY(180deg); }
+  .card-face,.card-back {
+    position:absolute; width:100%; height:100%;
+    border-radius:12px; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  }
+
+  .card-back {
+    background:var(--bg-card); border:1px solid rgba(201,168,76,.18);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    box-shadow:0 8px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(201,168,76,.08);
+  }
+  .cb-inner {
+    width:calc(100% - 14px); height:calc(100% - 14px);
+    border:1px solid rgba(201,168,76,.12); border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  }
+  .cb-inner::before {
+    content:''; position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(201,168,76,.035) 8px,rgba(201,168,76,.035) 9px),
+      repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(201,168,76,.035) 8px,rgba(201,168,76,.035) 9px);
+  }
+  .cb-glyph { font-size:34px; color:var(--gold); opacity:.45; position:relative; z-index:1; filter:drop-shadow(0 0 8px rgba(201,168,76,.35)); }
+
+  .card-face {
+    background:linear-gradient(155deg,#191b28 0%,#111320 55%,#0c0e18 100%);
+    border:1px solid rgba(201,168,76,.22);
+    transform:rotateY(180deg); padding:11px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    box-shadow:0 8px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(201,168,76,.06);
+    position:relative; overflow:hidden;
+  }
+  .card-face::before {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at 28% 28%,rgba(201,168,76,.06) 0%,transparent 55%);
+  }
+
+  .corner { display:flex; flex-direction:column; align-items:center; line-height:1; }
+  .corner.btm { transform:rotate(180deg); }
+  .c-rank { font-family:'Cinzel',serif; font-weight:600; font-size:19px; line-height:1; }
+  .c-suit  { font-size:13px; line-height:1; margin-top:1px; }
+  .card-mid { display:flex; align-items:center; justify-content:center; flex:1; }
+  .c-suit-lg { font-size:50px; filter:drop-shadow(0 2px 8px rgba(0,0,0,.5)); }
+  .suit-r { color:var(--red); }
+  .suit-b { color:var(--text-primary); }
+
+  /* Meaning */
+  .meaning-card {
+    background:linear-gradient(145deg,rgba(13,15,24,.96),rgba(8,9,16,.96));
+    border:1px solid rgba(201,168,76,.13); border-radius:10px;
+    padding:14px 16px; max-width:138px; text-align:center;
+    opacity:0; transform:translateY(8px);
+    transition:all .5s ease .45s;
+  }
+  .meaning-card.show { opacity:1; transform:translateY(0); }
+  .meaning-suit-label {
+    font-family:'Cinzel',serif; font-size:10px;
+    color:var(--gold-dim); letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:5px;
+  }
+  .meaning-text {
+    font-family:'Sarabun',sans-serif;
+    font-size:12px; color:var(--text-primary); line-height:1.75; font-weight:300;
+  }
+
+  /* ── Summary ── */
+  .reading-summary {
+    margin-top:34px;
+    background:linear-gradient(145deg,rgba(13,15,24,.92),rgba(8,9,16,.92));
+    border:1px solid rgba(201,168,76,.13);
+    border-top:2px solid rgba(201,168,76,.28); border-radius:12px;
+    padding:22px 26px; text-align:center;
+    opacity:0; transform:translateY(18px); transition:all .6s ease;
+  }
+  .reading-summary.show { opacity:1; transform:translateY(0); }
+  .reading-summary h3 {
+    font-family:'Cinzel',serif; font-size:11px;
+    color:var(--gold); letter-spacing:5px;
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  .summary-body { font-style:italic; font-size:15px; color:var(--text-secondary); line-height:2; }
+  .c-chip {
+    display:inline-flex; align-items:center; gap:4px;
+    background:rgba(201,168,76,.09); border:1px solid rgba(201,168,76,.18);
+    border-radius:4px; padding:2px 9px;
+    font-style:normal; font-size:13px;
+    color:var(--text-primary); margin:2px; font-family:'Cinzel',serif;
+  }
+
+  /* ── Ref Button ── */
+  .ref-btn {
+    position:fixed; bottom:26px; right:18px;
+    width:50px; height:50px;
+    background:linear-gradient(135deg,#6b4310,#c9a84c);
+    border:none; border-radius:50%; color:#080910; font-size:19px;
+    cursor:pointer; z-index:100;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 4px 20px rgba(201,168,76,.38);
+    transition:transform .3s,box-shadow .3s;
+    animation:glow-pulse 3s ease-in-out infinite;
+  }
+  .ref-btn:hover { transform:scale(1.1); box-shadow:0 6px 28px rgba(201,168,76,.6); }
+  @keyframes glow-pulse {
+    0%,100%{ box-shadow:0 4px 20px rgba(201,168,76,.35),0 0 0 0 rgba(201,168,76,.25); }
+    50%    { box-shadow:0 4px 20px rgba(201,168,76,.35),0 0 0 9px rgba(201,168,76,0); }
+  }
+
+  /* ── Modal ── */
+  .overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,.88);
+    backdrop-filter:blur(7px); z-index:200;
+    display:flex; align-items:center; justify-content:center; padding:14px;
+    opacity:0; pointer-events:none; transition:opacity .3s;
+  }
+  .overlay.open { opacity:1; pointer-events:all; }
+
+  .modal {
+    background:linear-gradient(160deg,#13151f 0%,#0d0f18 100%);
+    border:1px solid rgba(201,168,76,.22);
+    border-top:2px solid rgba(201,168,76,.45); border-radius:16px;
+    width:100%; max-width:700px; max-height:88vh;
+    overflow:hidden; display:flex; flex-direction:column;
+    transform:translateY(26px) scale(.97);
+    transition:transform .38s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 30px 80px rgba(0,0,0,.72),0 0 60px rgba(201,168,76,.05);
+  }
+  .overlay.open .modal { transform:translateY(0) scale(1); }
+
+  .modal-head {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px 14px;
+    border-bottom:1px solid rgba(201,168,76,.1); flex-shrink:0;
+  }
+  .modal-title {
+    font-family:'Cinzel Decorative',serif; font-size:14px;
+    background:linear-gradient(135deg,var(--gold-dim),var(--gold-light));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .modal-x {
+    width:30px; height:30px; background:rgba(201,168,76,.07);
+    border:1px solid rgba(201,168,76,.18); border-radius:50%;
+    color:var(--text-secondary); font-size:15px; cursor:pointer;
+    transition:all .2s; display:flex; align-items:center; justify-content:center;
+  }
+  .modal-x:hover { background:rgba(201,168,76,.16); color:var(--gold-light); }
+
+  .modal-body {
+    overflow-y:auto; padding:20px 22px 28px;
+    scrollbar-width:thin; scrollbar-color:rgba(201,168,76,.28) transparent;
+  }
+  .modal-body::-webkit-scrollbar { width:4px; }
+  .modal-body::-webkit-scrollbar-thumb { background:rgba(201,168,76,.28); border-radius:2px; }
+
+  .m-section-title {
+    font-family:'Cinzel',serif; font-size:10px; color:var(--gold-dim);
+    letter-spacing:5px; text-transform:uppercase;
+    margin-bottom:12px; padding-bottom:10px;
+    border-bottom:1px solid rgba(201,168,76,.1);
+  }
+
+  .spread-block {
+    background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.1);
+    border-left:3px solid rgba(201,168,76,.32); border-radius:8px;
+    padding:13px 16px; margin-bottom:9px;
+  }
+  .spread-block-name {
+    font-family:'Cinzel',serif; font-size:11px; color:var(--gold);
+    letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;
+  }
+  .spread-row { display:flex; gap:8px; align-items:flex-start; margin-bottom:4px; }
+  .sptag {
+    background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.2); border-radius:3px;
+    padding:1px 7px; font-family:'Cinzel',serif; font-size:9px;
+    color:var(--gold); letter-spacing:1px; white-space:nowrap; margin-top:3px; flex-shrink:0;
+  }
+  .spdesc { font-family:'Sarabun',sans-serif; font-size:12px; color:var(--text-secondary); line-height:1.75; }
+
+  .suit-section { margin:24px 0; }
+  .suit-head {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:12px; padding-bottom:10px;
+    border-bottom:1px solid rgba(201,168,76,.09);
+  }
+  .suit-glyph { font-size:22px; line-height:1; }
+  .suit-en { font-family:'Cinzel',serif; font-size:13px; color:var(--gold-light); letter-spacing:2px; }
+  .suit-th { font-family:'Sarabun',sans-serif; font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:7px; }
+  .ref-item {
+    background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.09);
+    border-radius:8px; padding:9px 12px; transition:border-color .2s,background .2s;
+  }
+  .ref-item:hover { border-color:rgba(201,168,76,.22); background:rgba(201,168,76,.07); }
+  .ref-rank { font-family:'Cinzel',serif; font-size:13px; font-weight:600; margin-bottom:3px; }
+  .ref-meaning { font-family:'Sarabun',sans-serif; font-size:12px; color:var(--text-secondary); line-height:1.65; }
+
+  /* Particle */
+  .particle {
+    position:fixed; border-radius:50%; pointer-events:none;
+    background:var(--gold); animation:float-up linear forwards; z-index:0;
+  }
+  @keyframes float-up {
+    from { opacity:.7; transform:translateY(0) scale(1); }
+    to   { opacity:0;  transform:translateY(-180px) scale(0); }
+  }
+
+  @media (max-width:480px) {
+    .card-wrapper { width:108px; height:155px; }
+    .c-suit-lg { font-size:36px; }
+    .c-rank { font-size:15px; }
+    .meaning-card { max-width:108px; }
+    .cards-area { gap:10px; }
+    h1 { font-size:20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header">
+    <div class="header-eye">✦</div>
+    <h1>Cartomancy</h1>
+    <p class="header-sub">The Art of Divination</p>
+    <div class="divider"><span>◆</span></div>
+  </header>
+
+  <div class="panel">
+    <div class="panel-label">Choose Your Spread</div>
+    <div class="spread-tabs">
+      <button class="spread-tab active" onclick="selectSpread(0)">Single Card</button>
+      <button class="spread-tab"        onclick="selectSpread(1)">Past · Present · Future</button>
+      <button class="spread-tab"        onclick="selectSpread(2)">Situation · Challenge · Outcome</button>
+      <button class="spread-tab"        onclick="selectSpread(3)">Path A · Path B</button>
+    </div>
+    <div class="spread-desc" id="spreadDesc"></div>
+  </div>
+
+  <div class="count-row">
+    <span class="count-label">Cards</span>
+    <div class="count-btns">
+      <button class="count-btn active" id="btn1" onclick="setCount(1)">1</button>
+      <button class="count-btn"        id="btn2" onclick="setCount(2)">2</button>
+      <button class="count-btn"        id="btn3" onclick="setCount(3)">3</button>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-draw"  onclick="drawCards()">✦ Draw</button>
+    <button class="btn-reset" onclick="resetDeck()">↺ Shuffle</button>
+  </div>
+
+  <div class="deck-status">Remaining in deck: <span id="deckCount">52</span></div>
+
+  <div class="cards-area" id="cardsArea"></div>
+
+  <div class="reading-summary" id="readingSummary">
+    <h3>✦ Reading Overview ✦</h3>
+    <div class="summary-body" id="summaryText"></div>
+  </div>
+
+</div>
+
+<button class="ref-btn" onclick="openModal()" title="Card Reference">📖</button>
+
+<div class="overlay" id="overlay" onclick="closeOutside(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">✦ Card Reference Guide</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="m-section-title">Spread Guides — วิธีการวางไพ่</div>
+
+      <div class="spread-block">
+        <div class="spread-block-name">I — Past · Present · Future</div>
+        <div class="spread-row"><span class="sptag">Card 1 · Past</span><span class="spdesc">สาเหตุและรากเหง้าของเรื่องราว — The root cause and origin of the situation</span></div>
+        <div class="spread-row"><span class="sptag">Card 2 · Present</span><span class="spdesc">สถานการณ์และพลังงานในขณะนี้ — Current energy and circumstances</span></div>
+        <div class="spread-row"><span class="sptag">Card 3 · Future</span><span class="spdesc">แนวโน้มและทิศทางที่จะเกิดขึ้น — Likely direction ahead</span></div>
+      </div>
+
+      <div class="spread-block">
+        <div class="spread-block-name">II — Situation · Challenge · Outcome</div>
+        <div class="spread-row"><span class="sptag">Card 1 · Situation</span><span class="spdesc">ภาพรวมและบริบทของเรื่องทั้งหมด — The overall picture</span></div>
+        <div class="spread-row"><span class="sptag">Card 2 · Challenge</span><span class="spdesc">อุปสรรคหรือสิ่งที่กำลังเผชิญ — The obstacle or conflict</span></div>
+        <div class="spread-row"><span class="sptag">Card 3 · Outcome</span><span class="spdesc">ทางออก บทสรุป หรือผลที่คาดว่าจะได้รับ — Resolution or conclusion</span></div>
+      </div>
+
+      <div class="spread-block">
+        <div class="spread-block-name">III — Path A · Path B</div>
+        <div class="spread-row"><span class="sptag">Card 1 · Path A</span><span class="spdesc">พลังงานและผลของเส้นทางแรก — Energy of the first choice</span></div>
+        <div class="spread-row"><span class="sptag">Card 2 · Path B</span><span class="spdesc">พลังงานและผลของเส้นทางที่สอง — เปรียบเทียบว่าทางใดดีกว่า</span></div>
+      </div>
+
+      <div class="suit-section">
+        <div class="suit-head">
+          <span class="suit-glyph" style="color:var(--red)">♥</span>
+          <div><div class="suit-en">Hearts — Emotions &amp; Relationships</div><div class="suit-th">โพแดง · อารมณ์ และ ความสัมพันธ์</div></div>
+        </div>
+        <div class="card-grid">
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">A♥</div><div class="ref-meaning">เริ่มต้นความรักใหม่ / ความสุข</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">2♥</div><div class="ref-meaning">การเชื่อมต่อ / ความสัมพันธ์ราบรื่น</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">3♥</div><div class="ref-meaning">การพบปะสังสรรค์ / งานรื่นเริง</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">4♥</div><div class="ref-meaning">ความพอใจในสิ่งที่มี / สบายใจ</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">5♥</div><div class="ref-meaning">ความรู้สึกที่เปลี่ยนไป</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">6♥</div><div class="ref-meaning">ความทรงจำที่อบอุ่น / คนเก่ากลับมา</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">7♥</div><div class="ref-meaning">ความสับสน / เลือกไม่ถูก</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">8♥</div><div class="ref-meaning">การเปลี่ยนแปลงในความสัมพันธ์</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">9♥</div><div class="ref-meaning">ความสมหวัง / ความสุขส่วนตัว</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">10♥</div><div class="ref-meaning">ความสุขที่ยิ่งใหญ่ / ครอบครัว</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">J♥</div><div class="ref-meaning">ข่าวดีเรื่องความรู้สึก</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">Q♥</div><div class="ref-meaning">ผู้หญิงที่เมตตาและเข้าใจคน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">K♥</div><div class="ref-meaning">ความมั่นคงทางอารมณ์ / ผู้ใหญ่ที่พึ่งพาได้</div></div>
+        </div>
+      </div>
+
+      <div class="suit-section">
+        <div class="suit-head">
+          <span class="suit-glyph" style="color:var(--red)">♦</span>
+          <div><div class="suit-en">Diamonds — Finance &amp; Opportunity</div><div class="suit-th">ข้าวหลามตัด · การเงิน และ โอกาส</div></div>
+        </div>
+        <div class="card-grid">
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">A♦</div><div class="ref-meaning">โอกาสใหม่ทางการเงินหรือการงาน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">2♦</div><div class="ref-meaning">การตัดสินใจเรื่องงาน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">3♦</div><div class="ref-meaning">การพัฒนาทักษะ / การเรียนรู้</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">4♦</div><div class="ref-meaning">ความมั่นคงทางการเงิน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">5♦</div><div class="ref-meaning">ความผันผวนทางการเงิน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">6♦</div><div class="ref-meaning">รายได้ที่สมดุล / การแบ่งปัน</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">7♦</div><div class="ref-meaning">การประเมินผลงาน / รอดูจังหวะ</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">8♦</div><div class="ref-meaning">การทำงานหนักเพื่อสร้างตัว</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">9♦</div><div class="ref-meaning">ผลตอบแทนที่น่าพึงพอใจ</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">10♦</div><div class="ref-meaning">โชคลาภก้อนใหญ่</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">J♦</div><div class="ref-meaning">ข่าวเรื่องเงินหรือโปรเจกต์ใหม่</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">Q♦</div><div class="ref-meaning">ผู้หญิงที่เก่งเรื่องธุรกิจ</div></div>
+          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">K♦</div><div class="ref-meaning">ผู้มีอำนาจหรือเจ้าของกิจการ</div></div>
+        </div>
+      </div>
+
+      <div class="suit-section">
+        <div class="suit-head">
+          <span class="suit-glyph" style="color:var(--text-primary)">♣</span>
+          <div><div class="suit-en">Clubs — Action &amp; Growth</div><div class="suit-th">ดอกจิก · การลงมือทำ และ การพัฒนา</div></div>
+        </div>
+        <div class="card-grid">
+          <div class="ref-item"><div class="ref-rank">A♣</div><div class="ref-meaning">ไอเดียใหม่ / เริ่มต้นลงมือทำ</div></div>
+          <div class="ref-item"><div class="ref-rank">2♣</div><div class="ref-meaning">การร่วมมือ / พาร์ทเนอร์</div></div>
+          <div class="ref-item"><div class="ref-rank">3♣</div><div class="ref-meaning">การขยับขยาย / พัฒนา</div></div>
+          <div class="ref-item"><div class="ref-rank">4♣</div><div class="ref-meaning">การวางรากฐานที่มั่นคง</div></div>
+          <div class="ref-item"><div class="ref-rank">5♣</div><div class="ref-meaning">ความท้าทายที่ต้องฝ่าฟัน</div></div>
+          <div class="ref-item"><div class="ref-rank">6♣</div><div class="ref-meaning">ความคืบหน้าของงาน</div></div>
+          <div class="ref-item"><div class="ref-rank">7♣</div><div class="ref-meaning">ความพยายามและการทดสอบ</div></div>
+          <div class="ref-item"><div class="ref-rank">8♣</div><div class="ref-meaning">ความก้าวหน้าอย่างรวดเร็ว</div></div>
+          <div class="ref-item"><div class="ref-rank">9♣</div><div class="ref-meaning">ความสำเร็จจากความพยายาม</div></div>
+          <div class="ref-item"><div class="ref-rank">10♣</div><div class="ref-meaning">ความรับผิดชอบที่ยิ่งใหญ่</div></div>
+          <div class="ref-item"><div class="ref-rank">J♣</div><div class="ref-meaning">ข่าวสารเกี่ยวกับการงาน</div></div>
+          <div class="ref-item"><div class="ref-rank">Q♣</div><div class="ref-meaning">ผู้หญิงที่ขยันและมีไหวพริบ</div></div>
+          <div class="ref-item"><div class="ref-rank">K♣</div><div class="ref-meaning">ผู้นำที่เน้นการปฏิบัติ</div></div>
+        </div>
+      </div>
+
+      <div class="suit-section">
+        <div class="suit-head">
+          <span class="suit-glyph" style="color:var(--text-primary)">♠</span>
+          <div><div class="suit-en">Spades — Obstacles &amp; Truth</div><div class="suit-th">โพดำ · อุปสรรค และ ความจริง</div></div>
+        </div>
+        <div class="card-grid">
+          <div class="ref-item"><div class="ref-rank">A♠</div><div class="ref-meaning">การตัดสินใจเด็ดขาด / ความจริงปรากฏ</div></div>
+          <div class="ref-item"><div class="ref-rank">2♠</div><div class="ref-meaning">ความขัดแย้งหรือการเผชิญหน้า</div></div>
+          <div class="ref-item"><div class="ref-rank">3♠</div><div class="ref-meaning">ความเสียใจ / ความผิดหวัง</div></div>
+          <div class="ref-item"><div class="ref-rank">4♠</div><div class="ref-meaning">การพักผ่อน / หยุดนิ่งชั่วคราว</div></div>
+          <div class="ref-item"><div class="ref-rank">5♠</div><div class="ref-meaning">ความสูญเสียหรือปัญหาจุกจิก</div></div>
+          <div class="ref-item"><div class="ref-rank">6♠</div><div class="ref-meaning">การพ้นจากช่วงเวลาที่ยากลำบาก</div></div>
+          <div class="ref-item"><div class="ref-rank">7♠</div><div class="ref-meaning">ความกังวล / ความลับ</div></div>
+          <div class="ref-item"><div class="ref-rank">8♠</div><div class="ref-meaning">แรงกดดันที่หลีกเลี่ยงไม่ได้</div></div>
+          <div class="ref-item"><div class="ref-rank">9♠</div><div class="ref-meaning">ความเครียดสะสม / คิดมาก</div></div>
+          <div class="ref-item"><div class="ref-rank">10♠</div><div class="ref-meaning">จุดสิ้นสุดเพื่อเริ่มใหม่ / ภาระหนัก</div></div>
+          <div class="ref-item"><div class="ref-rank">J♠</div><div class="ref-meaning">ข่าวที่ต้องระวัง</div></div>
+          <div class="ref-item"><div class="ref-rank">Q♠</div><div class="ref-meaning">ผู้หญิงที่เด็ดขาดและเข้มงวด</div></div>
+          <div class="ref-item"><div class="ref-rank">K♠</div><div class="ref-meaning">สถานการณ์ที่กดดันจากผู้มีอำนาจ</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SUITS={
+  '♥':{label:'Hearts',   thaiLabel:'โพแดง',       theme:'Emotions & Relationships', color:'r'},
+  '♦':{label:'Diamonds', thaiLabel:'ข้าวหลามตัด', theme:'Finance & Opportunity',    color:'r'},
+  '♣':{label:'Clubs',    thaiLabel:'ดอกจิก',       theme:'Action & Growth',          color:'b'},
+  '♠':{label:'Spades',   thaiLabel:'โพดำ',         theme:'Obstacles & Truth',        color:'b'},
+};
+const MEANINGS={
+  'A♥':'เริ่มต้นความรักใหม่ / ความสุข','2♥':'การเชื่อมต่อ / ความสัมพันธ์ราบรื่น',
+  '3♥':'การพบปะสังสรรค์ / งานรื่นเริง','4♥':'ความพอใจในสิ่งที่มี / สบายใจ',
+  '5♥':'ความรู้สึกที่เปลี่ยนไป','6♥':'ความทรงจำที่อบอุ่น / คนเก่ากลับมา',
+  '7♥':'ความสับสน / เลือกไม่ถูก','8♥':'การเปลี่ยนแปลงในความสัมพันธ์',
+  '9♥':'ความสมหวัง / ความสุขส่วนตัว','10♥':'ความสุขที่ยิ่งใหญ่ / ครอบครัว',
+  'J♥':'ข่าวดีเรื่องความรู้สึก','Q♥':'ผู้หญิงที่เมตตาและเข้าใจคน',
+  'K♥':'ความมั่นคงทางอารมณ์ / ผู้ใหญ่ที่พึ่งพาได้',
+  'A♦':'โอกาสใหม่ทางการเงินหรือการงาน','2♦':'การตัดสินใจเรื่องงาน',
+  '3♦':'การพัฒนาทักษะ / การเรียนรู้','4♦':'ความมั่นคงทางการเงิน',
+  '5♦':'ความผันผวนทางการเงิน','6♦':'รายได้ที่สมดุล / การแบ่งปัน',
+  '7♦':'การประเมินผลงาน / รอดูจังหวะ','8♦':'การทำงานหนักเพื่อสร้างตัว',
+  '9♦':'ผลตอบแทนที่น่าพึงพอใจ','10♦':'โชคลาภก้อนใหญ่',
+  'J♦':'ข่าวเรื่องเงินหรือโปรเจกต์ใหม่','Q♦':'ผู้หญิงที่เก่งเรื่องธุรกิจ',
+  'K♦':'ผู้มีอำนาจหรือเจ้าของกิจการ',
+  'A♣':'ไอเดียใหม่ / เริ่มต้นลงมือทำ','2♣':'การร่วมมือ / พาร์ทเนอร์',
+  '3♣':'การขยับขยาย / พัฒนา','4♣':'การวางรากฐานที่มั่นคง',
+  '5♣':'ความท้าทายที่ต้องฝ่าฟัน','6♣':'ความคืบหน้าของงาน',
+  '7♣':'ความพยายามและการทดสอบ','8♣':'ความก้าวหน้าอย่างรวดเร็ว',
+  '9♣':'ความสำเร็จจากความพยายาม','10♣':'ความรับผิดชอบที่ยิ่งใหญ่',
+  'J♣':'ข่าวสารเกี่ยวกับการงาน','Q♣':'ผู้หญิงที่ขยันและมีไหวพริบ',
+  'K♣':'ผู้นำที่เน้นการปฏิบัติ',
+  'A♠':'การตัดสินใจเด็ดขาด / ความจริงปรากฏ','2♠':'ความขัดแย้งหรือการเผชิญหน้า',
+  '3♠':'ความเสียใจ / ความผิดหวัง','4♠':'การพักผ่อน / หยุดนิ่งชั่วคราว',
+  '5♠':'ความสูญเสียหรือปัญหาจุกจิก','6♠':'การพ้นจากช่วงเวลาที่ยากลำบาก',
+  '7♠':'ความกังวล / ความลับ','8♠':'แรงกดดันที่หลีกเลี่ยงไม่ได้',
+  '9♠':'ความเครียดสะสม / คิดมาก','10♠':'จุดสิ้นสุดเพื่อเริ่มใหม่ / ภาระหนัก',
+  'J♠':'ข่าวที่ต้องระวัง','Q♠':'ผู้หญิงที่เด็ดขาดและเข้มงวด',
+  'K♠':'สถานการณ์ที่กดดันจากผู้มีอำนาจ',
+};
+const SPREADS=[
+  {label:'Single Card',count:1,positions:['Message'],
+   desc:'<span class="pos-chip">Card 1</span> A single message or energy for this moment.'},
+  {label:'Past · Present · Future',count:3,positions:['Past','Present','Future'],
+   desc:'<span class="pos-chip">Past</span> Root cause &nbsp;·&nbsp; <span class="pos-chip">Present</span> Current energy &nbsp;·&nbsp; <span class="pos-chip">Future</span> Likely direction'},
+  {label:'Situation · Challenge · Outcome',count:3,positions:['Situation','Challenge','Outcome'],
+   desc:'<span class="pos-chip">Situation</span> The full picture &nbsp;·&nbsp; <span class="pos-chip">Challenge</span> The obstacle &nbsp;·&nbsp; <span class="pos-chip">Outcome</span> Resolution'},
+  {label:'Path A · Path B',count:2,positions:['Path A','Path B'],
+   desc:'<span class="pos-chip">Path A</span> Energy of the first choice &nbsp;·&nbsp; <span class="pos-chip">Path B</span> Energy of the second — compare which resonates more.'},
+];
+
+let deck=[],drawCount=1,selectedSpread=0;
+
+function buildDeck(){
+  deck=[];
+  ['♥','♦','♣','♠'].forEach(s=>['A','2','3','4','5','6','7','8','9','10','J','Q','K'].forEach(r=>deck.push({rank:r,suit:s})));
+  shuffle(deck);
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+
+function selectSpread(idx){
+  selectedSpread=idx;
+  document.querySelectorAll('.spread-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.getElementById('spreadDesc').innerHTML=SPREADS[idx].desc;
+  setCount(SPREADS[idx].count);
+  clearView();
+}
+
+function setCount(n){
+  drawCount=n;
+  [1,2,3].forEach(i=>document.getElementById('btn'+i).classList.toggle('active',i===n));
+}
+
+function resetDeck(){ buildDeck(); clearView(); document.getElementById('deckCount').textContent=deck.length; spawnParticles(); }
+function clearView(){ document.getElementById('cardsArea').innerHTML=''; document.getElementById('readingSummary').classList.remove('show'); }
+
+function drawCards(){
+  if(deck.length<drawCount) resetDeck();
+  const drawn=deck.splice(0,drawCount);
+  document.getElementById('deckCount').textContent=deck.length;
+  renderCards(drawn); spawnParticles();
+}
+
+function renderCards(cards){
+  const area=document.getElementById('cardsArea');
+  area.innerHTML='';
+  const spread=SPREADS[selectedSpread];
+  cards.forEach((card,idx)=>{
+    const key=card.rank+card.suit, si=SUITS[card.suit];
+    const cc=si.color==='r'?'suit-r':'suit-b';
+    const pos=spread.positions[idx]||`Card ${idx+1}`;
+    const slot=document.createElement('div');
+    slot.className='card-slot'; slot.style.animationDelay=`${idx*.15}s`;
+    slot.innerHTML=`
+      <div class="pos-label">${pos}</div>
+      <div class="card-wrapper" onclick="flipCard(this)">
+        <div class="card-inner" id="ci-${idx}">
+          <div class="card-back"><div class="cb-inner"><div class="cb-glyph">✦</div></div></div>
+          <div class="card-face">
+            <div class="corner top"><div class="c-rank ${cc}">${card.rank}</div><div class="c-suit ${cc}">${card.suit}</div></div>
+            <div class="card-mid"><div class="c-suit-lg ${cc}">${card.suit}</div></div>
+            <div class="corner btm"><div class="c-rank ${cc}">${card.rank}</div><div class="c-suit ${cc}">${card.suit}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="meaning-card" id="mc-${idx}">
+        <div class="meaning-suit-label">${si.label} ${card.suit}</div>
+        <div class="meaning-text">${MEANINGS[key]||''}</div>
+      </div>`;
+    area.appendChild(slot);
+    setTimeout(()=>{
+      const ci=document.getElementById(`ci-${idx}`); if(ci) ci.classList.add('flipped');
+      setTimeout(()=>{ const mc=document.getElementById(`mc-${idx}`); if(mc) mc.classList.add('show'); },420);
+    },300+idx*200);
+  });
+  setTimeout(()=>showSummary(cards),300+cards.length*200+720);
+}
+
+function flipCard(w){ const ci=w.querySelector('.card-inner'); if(ci) ci.classList.toggle('flipped'); }
+
+function showSummary(cards){
+  if(cards.length<2) return;
+  const spread=SPREADS[selectedSpread];
+  let html='';
+  cards.forEach((c,i)=>{
+    const si=SUITS[c.suit], col=si.color==='r'?'color:var(--red)':'';
+    html+=`<span class="c-chip"><span style="${col}">${c.suit}</span> ${c.rank} · ${spread.positions[i]||''}</span> `;
+  });
+  html+=`<br><br><em>The cards drawn reflect the energy around you now — contemplate with a still mind.</em>`;
+  document.getElementById('summaryText').innerHTML=html;
+  document.getElementById('readingSummary').classList.add('show');
+}
+
+function spawnParticles(){
+  for(let i=0;i<14;i++) setTimeout(()=>{
+    const p=document.createElement('div'); p.className='particle';
+    p.style.cssText=`left:${Math.random()*100}vw;bottom:0;width:${Math.random()*3+2}px;height:${Math.random()*3+2}px;opacity:${Math.random()*.6+.3};animation-duration:${Math.random()*2+1.4}s`;
+    document.body.appendChild(p); setTimeout(()=>p.remove(),3500);
+  },i*75);
+}
+
+function openModal(){ document.getElementById('overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeOutside(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+buildDeck(); selectSpread(0);
+</script>
+</body>
+</html>
