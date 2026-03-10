@@ -359,6 +359,78 @@
     border-bottom:1px solid rgba(201,168,76,.1);
   }
 
+  /* Formula row */
+  .read-formula {
+    background:rgba(201,168,76,.05); border:1px solid rgba(201,168,76,.12);
+    border-radius:10px; padding:16px 18px; margin-bottom:4px;
+  }
+  .formula-eq {
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    justify-content:center; margin-bottom:14px;
+  }
+  .formula-box {
+    font-family:'Cinzel',serif; font-size:12px; letter-spacing:2px;
+    padding:5px 14px; border-radius:5px; text-transform:uppercase;
+  }
+  .formula-box.num { background:rgba(201,168,76,.14); border:1px solid rgba(201,168,76,.3); color:var(--gold-light); }
+  .formula-box.suit { background:rgba(192,57,75,.12); border:1px solid rgba(192,57,75,.3); color:#d96070; }
+  .formula-plus { font-family:'Cinzel',serif; font-size:16px; color:var(--gold-dim); }
+  .formula-result { font-family:'EB Garamond',serif; font-style:italic; font-size:15px; color:var(--text-secondary); }
+  .formula-examples {
+    display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  }
+  .fex {
+    display:flex; align-items:center; gap:6px;
+    background:rgba(201,168,76,.06); border:1px solid rgba(201,168,76,.1);
+    border-radius:6px; padding:5px 10px;
+  }
+  .fex-card { font-family:'Cinzel',serif; font-size:14px; font-weight:600; color:var(--text-primary); }
+  .fex-desc { font-family:'Sarabun',sans-serif; font-size:11px; color:var(--text-secondary); }
+
+  /* Number grid */
+  .num-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:6px;
+  }
+  .num-item {
+    display:flex; align-items:flex-start; gap:10px;
+    background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.09);
+    border-radius:8px; padding:9px 12px;
+    transition:border-color .2s, background .2s;
+  }
+  .num-item:hover { border-color:rgba(201,168,76,.22); background:rgba(201,168,76,.07); }
+  .num-rank {
+    font-family:'Cinzel',serif; font-size:15px; font-weight:600;
+    color:var(--gold-light); min-width:24px; line-height:1.4; flex-shrink:0;
+  }
+  .num-desc {
+    font-family:'Sarabun',sans-serif; font-size:12px;
+    color:var(--text-secondary); line-height:1.7;
+  }
+
+  /* Suit grid */
+  .suit-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:6px;
+    margin-bottom:4px;
+  }
+  .suit-item {
+    background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.09);
+    border-radius:8px; padding:11px 14px;
+    transition:border-color .2s, background .2s;
+  }
+  .suit-item:hover { border-color:rgba(201,168,76,.22); background:rgba(201,168,76,.07); }
+  .si-head { display:flex; align-items:center; gap:8px; margin-bottom:5px; font-size:18px; line-height:1; }
+  .si-label { font-family:'Cinzel',serif; font-size:12px; color:var(--gold-light); letter-spacing:1.5px; }
+  .si-desc { font-family:'Sarabun',sans-serif; font-size:12px; color:var(--text-secondary); line-height:1.7; }
+
+  /* Tip box */
+  .tip-box {
+    margin-top:10px; padding:8px 12px;
+    background:rgba(201,168,76,.07); border-left:2px solid rgba(201,168,76,.35);
+    border-radius:0 6px 6px 0;
+    font-family:'Sarabun',sans-serif; font-size:11.5px;
+    color:var(--text-secondary); line-height:1.75;
+  }
+
   .spread-block {
     background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.1);
     border-left:3px solid rgba(201,168,76,.32); border-radius:8px;
@@ -375,25 +447,6 @@
     color:var(--gold); letter-spacing:1px; white-space:nowrap; margin-top:3px; flex-shrink:0;
   }
   .spdesc { font-family:'Sarabun',sans-serif; font-size:12px; color:var(--text-secondary); line-height:1.75; }
-
-  .suit-section { margin:24px 0; }
-  .suit-head {
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:12px; padding-bottom:10px;
-    border-bottom:1px solid rgba(201,168,76,.09);
-  }
-  .suit-glyph { font-size:22px; line-height:1; }
-  .suit-en { font-family:'Cinzel',serif; font-size:13px; color:var(--gold-light); letter-spacing:2px; }
-  .suit-th { font-family:'Sarabun',sans-serif; font-size:11px; color:var(--text-muted); margin-top:2px; }
-
-  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(175px,1fr)); gap:7px; }
-  .ref-item {
-    background:rgba(201,168,76,.04); border:1px solid rgba(201,168,76,.09);
-    border-radius:8px; padding:9px 12px; transition:border-color .2s,background .2s;
-  }
-  .ref-item:hover { border-color:rgba(201,168,76,.22); background:rgba(201,168,76,.07); }
-  .ref-rank { font-family:'Cinzel',serif; font-size:13px; font-weight:600; margin-bottom:3px; }
-  .ref-meaning { font-family:'Sarabun',sans-serif; font-size:12px; color:var(--text-secondary); line-height:1.65; }
 
   /* Particle */
   .particle {
@@ -471,114 +524,92 @@
     </div>
     <div class="modal-body">
 
-      <div class="m-section-title">Spread Guides — วิธีการวางไพ่</div>
+      <!-- ── HOW TO READ ── -->
+      <div class="m-section-title">How to Read — สูตรอ่านไพ่</div>
+      <div class="read-formula">
+        <div class="formula-eq">
+          <span class="formula-box num">Number</span>
+          <span class="formula-plus">+</span>
+          <span class="formula-box suit">Suit</span>
+          <span class="formula-plus">=</span>
+          <span class="formula-result">Meaning</span>
+        </div>
+        <div class="formula-examples">
+          <span class="fex"><span class="fex-card" style="color:var(--red)">7♣</span><span class="fex-desc">การทดสอบจากการลงมือทำ</span></span>
+          <span class="fex"><span class="fex-card" style="color:var(--red)">A♦</span><span class="fex-desc">โอกาสใหม่ด้านงานหรือเงิน</span></span>
+          <span class="fex"><span class="fex-card">9♠</span><span class="fex-desc">ความเครียดที่ใกล้จะจบ</span></span>
+        </div>
+      </div>
+
+      <!-- ── NUMBER MEANINGS ── -->
+      <div class="m-section-title" style="margin-top:22px">Number Meanings — ความหมายของเลข</div>
+      <div class="num-grid">
+        <div class="num-item"><div class="num-rank">A</div><div class="num-desc">เริ่มต้น / โอกาสใหม่ / จุดกำเนิด</div></div>
+        <div class="num-item"><div class="num-rank">2</div><div class="num-desc">ทางเลือก / ความสัมพันธ์ / การเชื่อมสองสิ่ง</div></div>
+        <div class="num-item"><div class="num-rank">3</div><div class="num-desc">การเริ่มพัฒนา / การขยาย / ความร่วมมือ</div></div>
+        <div class="num-item"><div class="num-rank">4</div><div class="num-desc">ความมั่นคง / โครงสร้าง / การตั้งหลัก</div></div>
+        <div class="num-item"><div class="num-rank">5</div><div class="num-desc">การเปลี่ยนแปลง / ความขัดแย้ง / ไม่แน่นอน</div></div>
+        <div class="num-item"><div class="num-rank">6</div><div class="num-desc">สมดุล / การปรับตัว / การเดินหน้า</div></div>
+        <div class="num-item"><div class="num-rank">7</div><div class="num-desc">การทดสอบ / ความลังเล / ประเมินสถานการณ์</div></div>
+        <div class="num-item"><div class="num-rank">8</div><div class="num-desc">ความพยายาม / การเคลื่อนไหว / ลงมือทำจริง</div></div>
+        <div class="num-item"><div class="num-rank">9</div><div class="num-desc">ผลลัพธ์ / ความสำเร็จบางส่วน / ใกล้จบ</div></div>
+        <div class="num-item"><div class="num-rank">10</div><div class="num-desc">จุดสูงสุด / ภาระ / การจบรอบ</div></div>
+        <div class="num-item"><div class="num-rank">J</div><div class="num-desc">ข่าว / ข้อความ / คนส่งข่าว / คนอายุน้อย</div></div>
+        <div class="num-item"><div class="num-rank">Q</div><div class="num-desc">ความเข้าใจ / ความรู้สึก / ผู้มีอิทธิพล</div></div>
+        <div class="num-item"><div class="num-rank">K</div><div class="num-desc">อำนาจ / การควบคุม / ผู้นำ / การตัดสินใจ</div></div>
+      </div>
+
+      <!-- ── SUIT MEANINGS ── -->
+      <div class="m-section-title" style="margin-top:22px">Suit Meanings — ความหมายของดอก</div>
+      <div class="suit-grid">
+        <div class="suit-item">
+          <div class="si-head"><span style="color:var(--red)">♥</span><span class="si-label">Hearts</span></div>
+          <div class="si-desc">Emotion — ความรัก / ความรู้สึก / ความสัมพันธ์</div>
+        </div>
+        <div class="suit-item">
+          <div class="si-head"><span style="color:var(--red)">♦</span><span class="si-label">Diamonds</span></div>
+          <div class="si-desc">Work — เงิน / โอกาส / เรื่องทางโลก</div>
+        </div>
+        <div class="suit-item">
+          <div class="si-head"><span>♣</span><span class="si-label">Clubs</span></div>
+          <div class="si-desc">Action — การกระทำ / ความพยายาม / การพัฒนา</div>
+        </div>
+        <div class="suit-item">
+          <div class="si-head"><span>♠</span><span class="si-label">Spades</span></div>
+          <div class="si-desc">Problem — อุปสรรค / ความเครียด / ความท้าทาย</div>
+        </div>
+      </div>
+
+      <!-- ── SPREAD GUIDES ── -->
+      <div class="m-section-title" style="margin-top:22px">Spread Guides — วิธีการวางไพ่</div>
 
       <div class="spread-block">
-        <div class="spread-block-name">I — Past · Present · Future</div>
-        <div class="spread-row"><span class="sptag">Card 1 · Past</span><span class="spdesc">สาเหตุและรากเหง้าของเรื่องราว — The root cause and origin of the situation</span></div>
-        <div class="spread-row"><span class="sptag">Card 2 · Present</span><span class="spdesc">สถานการณ์และพลังงานในขณะนี้ — Current energy and circumstances</span></div>
-        <div class="spread-row"><span class="sptag">Card 3 · Future</span><span class="spdesc">แนวโน้มและทิศทางที่จะเกิดขึ้น — Likely direction ahead</span></div>
+        <div class="spread-block-name">① Single Card — Message</div>
+        <div class="spread-row"><span class="sptag">Card 1</span><span class="spdesc">พลังงานของช่วงเวลานี้ / สิ่งที่ควรรับรู้ / คำแนะนำสั้น ๆ</span></div>
+        <div class="tip-box">สูตร: ความหมาย = เลข + ดอก</div>
       </div>
 
       <div class="spread-block">
-        <div class="spread-block-name">II — Situation · Challenge · Outcome</div>
-        <div class="spread-row"><span class="sptag">Card 1 · Situation</span><span class="spdesc">ภาพรวมและบริบทของเรื่องทั้งหมด — The overall picture</span></div>
-        <div class="spread-row"><span class="sptag">Card 2 · Challenge</span><span class="spdesc">อุปสรรคหรือสิ่งที่กำลังเผชิญ — The obstacle or conflict</span></div>
-        <div class="spread-row"><span class="sptag">Card 3 · Outcome</span><span class="spdesc">ทางออก บทสรุป หรือผลที่คาดว่าจะได้รับ — Resolution or conclusion</span></div>
+        <div class="spread-block-name">② Past · Present · Future</div>
+        <div class="spread-row"><span class="sptag">Past</span><span class="spdesc">สาเหตุของเรื่อง — root of the situation</span></div>
+        <div class="spread-row"><span class="sptag">Present</span><span class="spdesc">สถานการณ์ตอนนี้ — current state</span></div>
+        <div class="spread-row"><span class="sptag">Future</span><span class="spdesc">แนวโน้มถ้าอะไรยังดำเนินแบบเดิม</span></div>
+        <div class="tip-box">เทคนิค: ดูการเปลี่ยนของตัวเลข เช่น 4→7→9 = จากความมั่นคง → มีการทดสอบ → สู่ผลลัพธ์</div>
       </div>
 
       <div class="spread-block">
-        <div class="spread-block-name">III — Path A · Path B</div>
-        <div class="spread-row"><span class="sptag">Card 1 · Path A</span><span class="spdesc">พลังงานและผลของเส้นทางแรก — Energy of the first choice</span></div>
-        <div class="spread-row"><span class="sptag">Card 2 · Path B</span><span class="spdesc">พลังงานและผลของเส้นทางที่สอง — เปรียบเทียบว่าทางใดดีกว่า</span></div>
+        <div class="spread-block-name">③ Situation · Challenge · Outcome</div>
+        <div class="spread-row"><span class="sptag">Situation</span><span class="spdesc">ภาพรวมของเรื่อง — the full picture</span></div>
+        <div class="spread-row"><span class="sptag">Challenge</span><span class="spdesc">สิ่งที่ขวางหรือทำให้ยาก — the obstacle</span></div>
+        <div class="spread-row"><span class="sptag">Outcome</span><span class="spdesc">ผลถ้ารับมือสถานการณ์นี้ — resolution</span></div>
+        <div class="tip-box">เทคนิค: ดูว่า Challenge ขัดกับ Situation ไหม<br>เช่น 6♥ (สมดุลด้านความรู้สึก) + 5♠ (ปัญหาซ่อนอยู่) = ความสัมพันธ์ที่เหมือนจะดี แต่มีความขัดแย้งซ่อนอยู่</div>
       </div>
 
-      <div class="suit-section">
-        <div class="suit-head">
-          <span class="suit-glyph" style="color:var(--red)">♥</span>
-          <div><div class="suit-en">Hearts — Emotions &amp; Relationships</div><div class="suit-th">โพแดง · อารมณ์ และ ความสัมพันธ์</div></div>
-        </div>
-        <div class="card-grid">
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">A♥</div><div class="ref-meaning">เริ่มต้นความรักใหม่ / ความสุข</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">2♥</div><div class="ref-meaning">การเชื่อมต่อ / ความสัมพันธ์ราบรื่น</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">3♥</div><div class="ref-meaning">การพบปะสังสรรค์ / งานรื่นเริง</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">4♥</div><div class="ref-meaning">ความพอใจในสิ่งที่มี / สบายใจ</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">5♥</div><div class="ref-meaning">ความรู้สึกที่เปลี่ยนไป</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">6♥</div><div class="ref-meaning">ความทรงจำที่อบอุ่น / คนเก่ากลับมา</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">7♥</div><div class="ref-meaning">ความสับสน / เลือกไม่ถูก</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">8♥</div><div class="ref-meaning">การเปลี่ยนแปลงในความสัมพันธ์</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">9♥</div><div class="ref-meaning">ความสมหวัง / ความสุขส่วนตัว</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">10♥</div><div class="ref-meaning">ความสุขที่ยิ่งใหญ่ / ครอบครัว</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">J♥</div><div class="ref-meaning">ข่าวดีเรื่องความรู้สึก</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">Q♥</div><div class="ref-meaning">ผู้หญิงที่เมตตาและเข้าใจคน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">K♥</div><div class="ref-meaning">ความมั่นคงทางอารมณ์ / ผู้ใหญ่ที่พึ่งพาได้</div></div>
-        </div>
-      </div>
-
-      <div class="suit-section">
-        <div class="suit-head">
-          <span class="suit-glyph" style="color:var(--red)">♦</span>
-          <div><div class="suit-en">Diamonds — Finance &amp; Opportunity</div><div class="suit-th">ข้าวหลามตัด · การเงิน และ โอกาส</div></div>
-        </div>
-        <div class="card-grid">
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">A♦</div><div class="ref-meaning">โอกาสใหม่ทางการเงินหรือการงาน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">2♦</div><div class="ref-meaning">การตัดสินใจเรื่องงาน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">3♦</div><div class="ref-meaning">การพัฒนาทักษะ / การเรียนรู้</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">4♦</div><div class="ref-meaning">ความมั่นคงทางการเงิน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">5♦</div><div class="ref-meaning">ความผันผวนทางการเงิน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">6♦</div><div class="ref-meaning">รายได้ที่สมดุล / การแบ่งปัน</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">7♦</div><div class="ref-meaning">การประเมินผลงาน / รอดูจังหวะ</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">8♦</div><div class="ref-meaning">การทำงานหนักเพื่อสร้างตัว</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">9♦</div><div class="ref-meaning">ผลตอบแทนที่น่าพึงพอใจ</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">10♦</div><div class="ref-meaning">โชคลาภก้อนใหญ่</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">J♦</div><div class="ref-meaning">ข่าวเรื่องเงินหรือโปรเจกต์ใหม่</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">Q♦</div><div class="ref-meaning">ผู้หญิงที่เก่งเรื่องธุรกิจ</div></div>
-          <div class="ref-item"><div class="ref-rank" style="color:var(--red)">K♦</div><div class="ref-meaning">ผู้มีอำนาจหรือเจ้าของกิจการ</div></div>
-        </div>
-      </div>
-
-      <div class="suit-section">
-        <div class="suit-head">
-          <span class="suit-glyph" style="color:var(--text-primary)">♣</span>
-          <div><div class="suit-en">Clubs — Action &amp; Growth</div><div class="suit-th">ดอกจิก · การลงมือทำ และ การพัฒนา</div></div>
-        </div>
-        <div class="card-grid">
-          <div class="ref-item"><div class="ref-rank">A♣</div><div class="ref-meaning">ไอเดียใหม่ / เริ่มต้นลงมือทำ</div></div>
-          <div class="ref-item"><div class="ref-rank">2♣</div><div class="ref-meaning">การร่วมมือ / พาร์ทเนอร์</div></div>
-          <div class="ref-item"><div class="ref-rank">3♣</div><div class="ref-meaning">การขยับขยาย / พัฒนา</div></div>
-          <div class="ref-item"><div class="ref-rank">4♣</div><div class="ref-meaning">การวางรากฐานที่มั่นคง</div></div>
-          <div class="ref-item"><div class="ref-rank">5♣</div><div class="ref-meaning">ความท้าทายที่ต้องฝ่าฟัน</div></div>
-          <div class="ref-item"><div class="ref-rank">6♣</div><div class="ref-meaning">ความคืบหน้าของงาน</div></div>
-          <div class="ref-item"><div class="ref-rank">7♣</div><div class="ref-meaning">ความพยายามและการทดสอบ</div></div>
-          <div class="ref-item"><div class="ref-rank">8♣</div><div class="ref-meaning">ความก้าวหน้าอย่างรวดเร็ว</div></div>
-          <div class="ref-item"><div class="ref-rank">9♣</div><div class="ref-meaning">ความสำเร็จจากความพยายาม</div></div>
-          <div class="ref-item"><div class="ref-rank">10♣</div><div class="ref-meaning">ความรับผิดชอบที่ยิ่งใหญ่</div></div>
-          <div class="ref-item"><div class="ref-rank">J♣</div><div class="ref-meaning">ข่าวสารเกี่ยวกับการงาน</div></div>
-          <div class="ref-item"><div class="ref-rank">Q♣</div><div class="ref-meaning">ผู้หญิงที่ขยันและมีไหวพริบ</div></div>
-          <div class="ref-item"><div class="ref-rank">K♣</div><div class="ref-meaning">ผู้นำที่เน้นการปฏิบัติ</div></div>
-        </div>
-      </div>
-
-      <div class="suit-section">
-        <div class="suit-head">
-          <span class="suit-glyph" style="color:var(--text-primary)">♠</span>
-          <div><div class="suit-en">Spades — Obstacles &amp; Truth</div><div class="suit-th">โพดำ · อุปสรรค และ ความจริง</div></div>
-        </div>
-        <div class="card-grid">
-          <div class="ref-item"><div class="ref-rank">A♠</div><div class="ref-meaning">การตัดสินใจเด็ดขาด / ความจริงปรากฏ</div></div>
-          <div class="ref-item"><div class="ref-rank">2♠</div><div class="ref-meaning">ความขัดแย้งหรือการเผชิญหน้า</div></div>
-          <div class="ref-item"><div class="ref-rank">3♠</div><div class="ref-meaning">ความเสียใจ / ความผิดหวัง</div></div>
-          <div class="ref-item"><div class="ref-rank">4♠</div><div class="ref-meaning">การพักผ่อน / หยุดนิ่งชั่วคราว</div></div>
-          <div class="ref-item"><div class="ref-rank">5♠</div><div class="ref-meaning">ความสูญเสียหรือปัญหาจุกจิก</div></div>
-          <div class="ref-item"><div class="ref-rank">6♠</div><div class="ref-meaning">การพ้นจากช่วงเวลาที่ยากลำบาก</div></div>
-          <div class="ref-item"><div class="ref-rank">7♠</div><div class="ref-meaning">ความกังวล / ความลับ</div></div>
-          <div class="ref-item"><div class="ref-rank">8♠</div><div class="ref-meaning">แรงกดดันที่หลีกเลี่ยงไม่ได้</div></div>
-          <div class="ref-item"><div class="ref-rank">9♠</div><div class="ref-meaning">ความเครียดสะสม / คิดมาก</div></div>
-          <div class="ref-item"><div class="ref-rank">10♠</div><div class="ref-meaning">จุดสิ้นสุดเพื่อเริ่มใหม่ / ภาระหนัก</div></div>
-          <div class="ref-item"><div class="ref-rank">J♠</div><div class="ref-meaning">ข่าวที่ต้องระวัง</div></div>
-          <div class="ref-item"><div class="ref-rank">Q♠</div><div class="ref-meaning">ผู้หญิงที่เด็ดขาดและเข้มงวด</div></div>
-          <div class="ref-item"><div class="ref-rank">K♠</div><div class="ref-meaning">สถานการณ์ที่กดดันจากผู้มีอำนาจ</div></div>
-        </div>
+      <div class="spread-block">
+        <div class="spread-block-name">④ Path A · Path B</div>
+        <div class="spread-row"><span class="sptag">Path A</span><span class="spdesc">พลังงานของเส้นทางแรก</span></div>
+        <div class="spread-row"><span class="sptag">Path B</span><span class="spdesc">พลังงานของเส้นทางที่สอง — เปรียบเทียบ ไม่ใช่ดูอนาคต</span></div>
+        <div class="tip-box">เทคนิค: ตัวเลขใหญ่กว่า = พลังงานแรงกว่า · ดอกบอกลักษณะของทาง<br>เช่น 8♦ (ต้องทำงานหนัก แต่มีโอกาส) vs 6♥ (สบายกว่า สมดุลกว่า)</div>
       </div>
 
     </div>
